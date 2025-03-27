@@ -1,0 +1,290 @@
+SELECT DRSY, DRRT, DRKY, DRDL01, DRDL02, DRSPHD, DRUDCO, DRHRDC, DRUSER, DRPID, DRUPMJ, DRJOBN, DRUPMT, CDC_SRC_LAST_UPDATE_DATE, CDC_RPL_LAST_UPDATE_DATE
+FROM WORLD_PRODUCTION.WORLD.F0005 LIMIT 10;
+
+
+-----------------------------------------------------
+---purge f550006a Framework
+-----------------------------------------------------
+SELECT  * FROM E1_PRODUCTION.E1.F550006A LIMIT 10;
+SELECT count(*) FROM E1_PRODUCTION.E1.F550006A ;
+SELECT  count(*) FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu<>'' AND gc55tset LIKE 'POR%' ;
+SELECT  gcmcu, gc55tset, count(*) FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu<>'' AND gc55tset LIKE 'WMS%' GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+SELECT  gcmcu, gc55tset, count(*) FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu<>'' AND gc55tset LIKE 'WMSPOR'  GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+
+--- details of F550006A/F550247A
+SELECT  gcmcu, gc55tset, min(GC55UPMJO), max(GC55UPMJO), count(DISTINCT A.GCREFN), count(*) 
+FROM E1_PRODUCTION.E1.F550006A a INNER JOIN E1_PRODUCTION.E1.F550247A b ON a.gcmcu = b.CTMCU  AND a.GC55TSET =b.CT55TSET  AND a.GCREFN =b.CTREFN 
+WHERE gcmcu<>'' AND gc55tset = 'WMSPOR'  GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+--20230213
+--BDC	WMSPOR	2022-08-13	2023-02-13	 2,419	 1,154,588 1 20230214 New is 2,356 1,123,464
+--DC1	WMSPOR	2021-08-08	2021-10-12	     7       3,407 1 20230214 Disappeared
+--FL1	WMSPOR	2021-11-29	2023-02-13	 2,935	 2,066,756     3 20230217 2359	1,124,596
+--FL2	WMSPOR	2023-02-11	2023-02-13	     4	     1,850     3 20230217 1070	  863,550 
+--HD5	WMSPOR	2020-01-04	2021-10-04	 7,311	 2,864,440     3 Disappeared
+--HD6	WMSPOR	2021-10-07	2023-02-13	 4,855	 3,875,211   2 20230215 New is 1,454	1,225,255
+--HD7	WMSPOR	2021-10-06	2023-02-13	 4,976	 2,373,026               6 20230222 1,542	768,121
+--NDC	WMSPOR	2021-12-31	2023-02-13	12,608	12,350,214       4 20230220 5,906	5,850,695
+--SC2	WMSPOR	2020-01-04	2023-02-13	13,047	11,523,653           5 20230221 1,189	1,312,914
+--SC3	WMSPOR	2022-03-17	2023-02-09	 1,515	 1,218,678               6 20230222   679	683,304
+
+select * from i8inpt00  ;
+SELECT *
+FROM WMNDC_PRODUCTION.WMS.I8INPT00;
+
+
+
+
+-- summary by 
+SELECT  gcmcu, gc55tset, min(GC55UPMJO), max(GC55UPMJO), count(*) FROM E1_PRODUCTION.E1.F550006A 
+WHERE gcmcu<>'' AND gc55tset IN ('WMSPIX', 'WMSSIF', 'WMSSHC', 'WMSSIG')  
+GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+--AGP	PORWM	 1,064
+--BDC	PORWM	10,590
+--BDC	WMSPOR	 2,381
+--DC1	PORWM	 2,176
+--DC1	WMSPOR	  ,145
+--DLA	PORWM	  , 53
+--FL1	PORWM	 1,893
+--FL1	WMSPOR	 2,995
+--HD1	PORWM	12,029
+--HD4	PORWM	 3,138
+--HD5	WMSPOR	16,270
+--HD6	WMSPOR	 4,931
+--HD7	WMSPOR	 6,119
+--JAX	PORWM	  ,882
+--JUV	PORWM	 1,267
+--NC1	WMSPOR	 2,665
+--NDC	POR	   100,933
+--NDC	WMSPOR	12,681
+--SC1	PORWM	  ,541
+--SC2	WMSPOR	13,824
+--SC3	WMSPOR	 1,849
+
+----------------------------------------------------------
+-- Interfaces Receiving totals
+----------------------------------------------------------
+SELECT  gcmcu, gc55tset, min(GC55UPMJO), max(GC55UPMJO), count(*) FROM E1_PRODUCTION.E1.F550006A 
+WHERE gcmcu<>'' AND gc55tset IN ('WMSPIX', 'WMSPOR', 'WMSSIG')  
+AND gcmcu IN ('BDC','FL1','HD7','NDC','SC2')
+AND gc55UPMJO  BETWEEN '2023-01-01' AND '2023-03-18'
+GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+
+SELECT * FROM E1_PRODUCTION.E1.f550006a LIMIT 10;  --: 55UPMJO
+
+----------------------------------------------------------
+-- Interfaces Receiving details
+----------------------------------------------------------
+SELECT  1 Record, GC55UPMJO Date , GC55TDAYO , TRUNCATE(gc55tdayo/10000, 0) HOUR,  YEAROFWEEKISO(GC55UPMJO) DateIso, WEEKISO(GC55UPMJO) WeekIso, DAYOFWEEKISO(GC55UPMJO) Day_Week,
+CONCAT(YEAROFWEEKISO(GC55UPMJO), RIGHT('00'||WEEKISO(GC55UPMJO),2), DAYOFWEEKISO(GC55UPMJO)) AS YYYYWWN, a.*
+FROM E1_PRODUCTION.E1.F550006A A 
+WHERE gcmcu<>'' AND gc55tset IN ('WMSPIX', 'WMSPOR', 'WMSSIG')  
+AND gcmcu IN ('HD6','HD7','PFD')
+AND gc55UPMJO  BETWEEN '2024-01-07' AND '2024-06-02'     --'2023-01-01' AND '2023-03-19'
+ORDER BY 1;
+;
+SELECT  count(*) FROM E1_PRODUCTION.E1.F550006A 
+WHERE gcmcu<>'' AND gc55tset IN ('WMSPIX', 'WMSPOR', 'WMSSIG')  
+AND gcmcu IN ('HD6','HD7','PFD')
+AND gc55UPMJO  BETWEEN '2024-01-07' AND '2024-06-02'  ---AND gc55UPMJO  BETWEEN '2023-01-01' AND '2023-03-18'
+;
+SELECT gcmcu, min(gc55upmjo), max(gc55upmjo),count(*) FROM E1_PRODUCTION.E1.F550006A GROUP BY gcmcu ORDER BY 1;
+
+
+
+-----------------------------------------------------
+---purge f550247a Received Case Tracking
+-----------------------------------------------------
+SELECT  * FROM E1_PRODUCTION.E1.F550247A ;
+SELECT  min(ctupmj), max(ctupmj), count(*) FROM E1_PRODUCTION.E1.F550247A;
+--20230209 2014-08-02	2023-02-09	59,500,909
+SELECT  * FROM E1_PRODUCTION.E1.F550247A WHERE ct55tset IS NULL  AND ctmcu='HD1';
+SELECT  ctmcu, min(ctupmj), max(ctupmj), count(*) FROM E1_PRODUCTION.E1.F550247A GROUP BY ctmcu ORDER BY 1,2;
+SELECT  ctmcu, CT55TSET, min(ctupmj), max(ctupmj), count(*) FROM E1_PRODUCTION.E1.F550247A WHERE CT55TSET  = 'WMSPOR' GROUP BY ctmcu,CT55TSET ORDER BY 1,2;
+--HD1	2014-08-02	2021-10-03	 8,797,777
+--BDC	2017-01-20	2023-02-09	 6,463,438
+--SC1	2018-07-16	2019-02-22	   388,928
+--HD4	2018-07-30	2019-12-26	 1,308,977 20230213
+--JAX	2018-09-30	2019-12-12	   642,473 20230213
+--AGP	2018-11-03	2020-11-06	   383,678
+--JUV	2019-01-22	2020-02-25	   703,015
+--DLA	2019-01-22	2019-08-19	    38,259
+--DC1	2019-03-12	2021-10-12	 1,671,767
+--FL1	2019-07-29	2023-02-09	 3,468,812
+--SC2	2020-01-04	2023-02-09	11,529,055
+--HD5	2020-01-04	2021-10-04	 2,895,852 20230213
+--NC1	2021-02-06	2022-07-05	 1,588,246
+--HD7	2021-10-06	2023-02-09	 2,346,791
+--HD6	2021-10-07	2023-02-09	 3,856,136
+--NDC	2021-12-31	2023-02-09	12,198,892
+--SC3	2022-03-17	2023-02-09	 1,218,818
+
+-----------------------------------------------------
+---purge f550248a Receipt Summary. 
+-----------------------------------------------------
+
+SELECT  * FROM E1_PRODUCTION.E1.F550248A LIMIT 10 ;
+SELECT  min(rsupmj), max(rsupmj), count(*) FROM E1_PRODUCTION.E1.F550248A;
+--20230209 2014-08-02	2023-02-09	3,633,106
+SELECT  rsmcu, RS55TSET,min(rsupmj), max(rsupmj), count(*) FROM E1_PRODUCTION.E1.F550248A GROUP BY rsmcu,RS55TSET ORDER BY 2;
+SELECT  rsmcu, min(rsupmj), max(rsupmj), count(*) FROM E1_PRODUCTION.E1.F550248A GROUP BY rsmcu ORDER BY 2;
+--HD1	2014-08-02	2021-10-04	355,691
+--BDC	2017-01-20	2023-02-09	386,233
+--SC1	2018-07-16	2019-02-22	 27,816
+--HD4	2018-07-30	2019-12-28	222,729
+--JAX	2018-09-30	2019-12-12	 62,149
+--AGP	2018-11-03	2020-11-06	 36,372
+--JUV	2019-01-22	2020-02-27	 67,657
+--DLA	2019-01-23	2019-08-21	  2,352
+--DC1	2019-03-12	2023-01-06	593,089
+--FL1	2019-07-29	2023-02-09	194,473
+--SC2	2020-01-04	2023-02-09	271,453
+--HD5	2020-01-04	2021-10-04	287,595
+--NC1	2021-02-06	2022-12-08	 26,012
+--HD7	2021-10-06	2023-02-09	192,080
+--HD6	2021-10-07	2023-02-09	150,841
+--NDC	2021-12-31	2023-02-09	736,975
+--SC3	2022-03-17	2023-02-08	 19,589
+
+
+-----------------------------------------------------
+---purge f550006a Framework - clean files
+-----------------------------------------------------
+SELECT  * FROM E1_PRODUCTION.E1.F550006A LIMIT 10;
+SELECT  * FROM E1_PRODUCTION.E1.F550006A 
+WHERE gcrefn IN ('FO290889.TXT','FO290826.TXT','FO290703.TXT','FO290823.TXT') AND gc55tset ='WMSSHC' ORDER BY gctday;
+
+-----------------------------------------------------
+---purge f550006a Framework - clean files
+-----------------------------------------------------
+SELECT  * FROM E1_PRODUCTION.E1.F550006A LIMIT 10;
+SELECT count(*) FROM E1_PRODUCTION.E1.F550006A ;
+SELECT  count(*) FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu<>'' AND gc55tset LIKE 'POR%' ;
+SELECT  gcmcu, gc55tset,  YEAR(min(GC55UPMJO)), YEAR(max(GC55UPMJO)),count(*) FROM E1_PRODUCTION.E1.F550006A 
+WHERE gcmcu<>'' AND gc55tset <>'' AND GC55TSET NOT IN ('E846','E850GFS','IE846','ECNCL','OE944','WX12943') AND gcmcu IN ('AGP','BDC', 'DC1','DLA','FL1','FL2','HD1', 'HD4', 'HD5','HD6','HD7','JAX','JUV', 'LBD','LBH','MGM','NC1','NDC','ON3','SC1','SC2','SC3','')
+GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+
+SELECT  gcmcu, gc55tset, count(*) FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu<>'' AND gc55tset LIKE 'WMSPOR'  GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+
+SELECT  * FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu='SC3' AND gc55tset='WMSSHC' LIMIT 10;
+SELECT  GCCSTPO, gcrefn, count(*) FROM E1_PRODUCTION.E1.F550006A WHERE GCCSTPO ='SC2' AND gc55tset='WMSSHC'  GROUP BY GCCSTPO, GCREFN  HAVING count(*) > 1 ORDER BY 1, 2 ;
+
+
+-------------------------------
+-----------Container labels
+-------------------------------
+SELECT BH55BRC, BH55BCT, BHVEND, BHAN8, BHMCU, BH55BRCT, BHCRDJ, BH55PARBRC, BH55PARBCT, BHMCU2, BH55CTRS, BHURCD, BHURDT, BHURAT, BHURAB, BHURRF, BHAA10, BHUSER, BHPID, BHJOBN, BHUPMJ, BHTDAY, CDC_SRC_LAST_UPDATE_DATE, CDC_RPL_LAST_UPDATE_DATE
+FROM E1_PRODUCTION.E1.F550263A WHERE bhcrdj > '2023-01-01' AND bhmcu ='HD7';
+-- Detalle
+SELECT *
+FROM E1_PRODUCTION.E1.F550263B WHERE bd55brc IN ('013121877677053005','00908830960037363153','00208217800003061071');
+-- HD6 070968802936768077 and HD7 00908830960037363153 RM=00208217800003061071
+-- total by 55bct
+SELECT BH55BCT, count(*) FROM E1_PRODUCTION.E1.F550263A GROUP BY bh55bct;
+--FG  Finished good	311,467,378      2023-04-13
+--RM  Raw material		321,134
+--PFG Pallet FG		         10
+--SFG Semi FG 		  5,599,400
+
+-- F4141
+SELECT  * FROM E1_PRODUCTION.E1.F4141 WHERE pjcyno = 1001057
+LIMIT 10;
+
+-- F4013
+SELECT  count(*) FROM E1_PRODUCTION.E1.F4013;
+SELECT  * FROM E1_PRODUCTION.E1.F4013;
+
+SELECT RMPYID, RMDCTM, RMDOCM, RMPYE, RMGLBA, RMDMTJ, RMVDGJ, RMICU, RMICUT, RMDICJ, RMPAAP, RMCRCD, RMCRRM, RMAM, RMVLDT, RMPYIN, RMISTP, RMCBNK, RMBKTR, RMTORG, RMUSER, RMPID, RMUPMJ, RMUPMT, RMJOBN, RMMIP, RMLRFL, RMPRGF, RMGFL7, RMGFL8, RMGAM3, RMGAM4, RMGEN6, RMGEN7, RMNETTCID, RMNETDOC, RMRCND, RMR3, RMCNTRTID, RMCNTRTCD, RMWVID, RMBLSCD2, RMHARPER, RMHARSFX, CDC_SRC_LAST_UPDATE_DATE, CDC_RPL_LAST_UPDATE_DATE
+FROM E1_PRODUCTION.E1.F0413;
+
+
+
+
+-- E1_PRODUCTION.E1.F4013 
+SELECT count(*)  FROM e1_production.e1.f4013 ;
+
+-----------------------------------------------------
+---Items in NDC
+-----------------------------------------------------
+SELECT IBSRP1, IBSRP2 , IBSRP3 ,count(*) FROM e1_PRODUCTION.E1.f4102  WHERE ibmcu='NDC' AND ibsrp1<>'' GROUP BY IBSRP1, IBSRP2 , IBSRP3 ORDER BY 4 DESC, 1, 2, 3;
+SELECT  * FROM E1_PRODUCTION.E1.F550006A LIMIT 10;
+SELECT count(*) FROM E1_PRODUCTION.E1.F550006A ;
+SELECT  count(*) FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu<>'' AND gc55tset LIKE 'POR%' ;
+SELECT  gcmcu, gc55tset,  YEAR(min(GC55UPMJO)), YEAR(max(GC55UPMJO)),count(*) FROM E1_PRODUCTION.E1.F550006A 
+WHERE gcmcu<>'' AND gc55tset <>'' AND GC55TSET NOT IN ('E846','E850GFS','IE846','ECNCL','OE944','WX12943') AND gcmcu IN ('AGP','BDC', 'DC1','DLA','FL1','FL2','HD1', 'HD4', 'HD5','HD6','HD7','JAX','JUV', 'LBD','LBH','MGM','NC1','NDC','ON3','SC1','SC2','SC3','')
+GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+
+SELECT  gcmcu, gc55tset, count(*) FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu<>'' AND gc55tset LIKE 'WMSPOR'  GROUP BY gcmcu, gc55tset ORDER BY 1,2;
+
+SELECT  * FROM E1_PRODUCTION.E1.F550006A WHERE gcmcu='SC3' AND gc55tset='WMSSHC' LIMIT 10;
+SELECT  GCCSTPO, gcrefn, count(*) FROM E1_PRODUCTION.E1.F550006A WHERE GCCSTPO ='SC2' AND gc55tset='WMSSHC'  GROUP BY GCCSTPO, GCREFN  HAVING count(*) > 1 ORDER BY 1, 2 ;
+SELECT * FROM E1_PRODUCTION.E1.F0005 LIMIT 10; 
+
+-----------------------------------------------------------------------------------
+--- ITEMS
+-----------------------------------------------------------------------------------
+WITH itemselect AS (
+SELECT IBSRP1, IBSRP2 , IBSRP3 ,ibSRP8,ibsrp0,count(*) 
+FROM e1_PRODUCTION.E1.f4102  
+WHERE ibmcu='NDC' AND ibsrp1<>'' AND ibstkt<>'O' AND ibsrp8 IN ('FGA', 'FGR')
+GROUP BY IBSRP1, IBSRP2 , IBSRP3,ibsrp8,ibsrp0
+ORDER BY 1, 2, 3,4
+),
+code1 AS (
+SELECT i.*, SUBSTRING(drdl01, 1, 12)  AS text1 FROM itemselect i INNER JOIN E1_PRODUCTION.E1.F0005 ON ibsrp1=drky 
+WHERE drsy='41' AND drrt='S1'
+),
+code2 AS (
+SELECT i.*, substring(drky||rtrim(' '||ibsrp0)||' '||drdl01, 1, 15) AS text2 FROM code1 i INNER JOIN E1_PRODUCTION.E1.F0005 ON ibsrp2=drky 
+WHERE drsy='41' AND drrt='S2'
+),
+code3 AS (
+SELECT i.*, SUBSTRING(drdl02,28) AS text3 FROM code2 i INNER JOIN E1_PRODUCTION.E1.F0005 ON ibsrp3=drky  
+WHERE drsy='41' AND drrt='S3'
+), 
+lenfields AS (
+SELECT c.*, LENGTH(TRIM(text1)) l1,LENGTH(TRIM(text2)) l2,LENGTH(TRIM(text3)) l3, LENGTH(TRIM(text1))+LENGTH(TRIM(text2)) + LENGTH(TRIM(text3)) totall  
+FROM code3 c 
+)
+SELECT text1, TEXt3,text2, * FROM lenfields  ORDER BY ibsrp0 DESC 
+--totall   --WHERE  ibsrp1='E31' AND ibsrp2='P75' AND ibsrp3='BLG' 
+--SELECT ibsrp8, count(*) FROM lenfields GROUP BY ibsrp8 ORDER BY 1
+;
+
+SELECT SUBSTRING(drdl02,28) AS text3 FROM E1_PRODUCTION.E1.F0005 WHERE drsy='41' AND drrt='S3' GROUP BY SUBSTRING(drdl02,28) ORDER BY 1; 
+SELECT * FROM E1_PRODUCTION.E1.F4102 LIMIT 10;
+
+----------------------------------------------------------------------------------
+--- codigo y ITEMS
+-----------------------------------------------------------------------------------
+WITH itemselect AS (
+SELECT IBSRP1, IBSRP2 , IBSRP3 ,ibSRP8,ibsrp0,iblitm, count(*) 
+FROM e1_PRODUCTION.E1.f4102  
+WHERE ibmcu='NDC' AND ibsrp1<>'' AND ibstkt<>'O' AND ibsrp8 IN ('FGA', 'FGR')
+GROUP BY IBSRP1, IBSRP2 , IBSRP3,ibsrp8,ibsrp0,iblitm 
+ORDER BY 1, 2, 3,4
+),
+code1 AS (
+SELECT i.*, SUBSTRING(drdl01, 1, 12)  AS text1 FROM itemselect i INNER JOIN E1_PRODUCTION.E1.F0005 ON ibsrp1=drky 
+WHERE drsy='41' AND drrt='S1'
+),
+code2 AS (
+SELECT i.*, substring(drky||rtrim(' '||ibsrp0)||' '||drdl01, 1, 15) AS text2 FROM code1 i INNER JOIN E1_PRODUCTION.E1.F0005 ON ibsrp2=drky 
+WHERE drsy='41' AND drrt='S2'
+),
+code3 AS (
+SELECT i.*, SUBSTRING(drdl02,28) AS text3 FROM code2 i INNER JOIN E1_PRODUCTION.E1.F0005 ON ibsrp3=drky  
+WHERE drsy='41' AND drrt='S3'
+), 
+lenfields AS (
+SELECT c.*, LENGTH(TRIM(text1)) l1,LENGTH(TRIM(text2)) l2,LENGTH(TRIM(text3)) l3, LENGTH(TRIM(text1))+LENGTH(TRIM(text2)) + LENGTH(TRIM(text3)) totall  
+FROM code3 c 
+)
+SELECT iblitm, text1, TEXt3,text2, FROM lenfields  ORDER BY iblitm, text1, text3,text2  DESC 
+--totall   --WHERE  ibsrp1='E31' AND ibsrp2='P75' AND ibsrp3='BLG' 
+--SELECT ibsrp8, count(*) FROM lenfields GROUP BY ibsrp8 ORDER BY 1
+;
+
+SELECT SUBSTRING(drdl02,28) AS text3 FROM E1_PRODUCTION.E1.F0005 WHERE drsy='41' AND drrt='S3' GROUP BY SUBSTRING(drdl02,28) ORDER BY 1; 
+
+
+
