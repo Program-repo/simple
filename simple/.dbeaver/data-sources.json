@@ -1,0 +1,41 @@
+{
+	"folders": {},
+	"connections": {
+		"snowflake_jdbc-195d5553de0-3388f989b390ae4": {
+			"provider": "snowflake",
+			"driver": "snowflake_jdbc",
+			"name": "TEST_DB",
+			"save-password": true,
+			"configuration": {
+				"host": "gildan.east-us-2.azure.snowflakecomputing.com",
+				"port": "443",
+				"server": "REPORTER_WH",
+				"url": "jdbc:snowflake://gildan.east-us-2.azure.snowflakecomputing.com:443/?warehouse\u003dREPORTER_WH",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"provider-properties": {
+					"@dbeaver-schema@": "",
+					"ddString": "false"
+				},
+				"auth-model": "snowflake_snowflake"
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}
