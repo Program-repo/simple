@@ -72,7 +72,7 @@ SELECT * FROM e1.f41021 LIMIT 10;
 ----------------------------------------------------------------------------------------------
 ---   **** Inventory in Primary Location ***                                              ----
 ----------------------------------------------------------------------------------------------
-USE DATABASE e1_PRODUCTION;
+USE DATABASE e1_PRODUCTION ;
 
 SELECT limcu BU, ImLITM "Item", lilocn "Location",  lipqoh "OnHand", IMUOM1 UOM FROM e1.f41021 a INNER JOIN e1.f4101 ON liitm = imitm 
 WHERE limcu IN ('SC1','SC2','SC3','SC4','BDC','BD2','ON3','FL1','FL2','FL3','HD6','HD7','PFD','NDC') 
@@ -1677,6 +1677,15 @@ FROM E1.f4111 a
 WHERE ilmcu='NDC' AND illitm = '17C11DALG0' AND ilcrdj BETWEEN '2025-02-07' AND '2025-03-07' 
 GROUP BY illitm, ildoco,ildcto,  iltrum ORDER BY 1,2,3,4;
 
-SELECT limcu,count(*) FROM e1.f41021 a  
+SELECT limcu,count(*) FROM e1.f41021 a ;
+
+
+
+-------------------------------------libraries in DEV
+SELECT * FROM  ITMN_DASHBOARD.ITMNL.ITMNF05 WHERE (LN LIKE 'WM%' OR LN LIKE 'TE%' ) AND envn='PD' ORDER by 1,5 ;
+SELECT * FROM  ITMN_DASHBOARD.ITMNL.ITMNF05 WHERE (LN LIKE 'WM%' OR LN LIKE 'TE%' OR LN LIKE '%40%') AND envn='DV'  ;
+
+SELECT sum(library_size) FROM  ITMN_DASHBOARD.ITMNL.ITMNF05 WHERE (LN LIKE 'WM%' OR LN LIKE 'TE%' OR LN LIKE '%40%') AND envn='DV' ;
+
 
 
