@@ -4,7 +4,7 @@
 		"snowflake_jdbc-195d5553de0-3388f989b390ae4": {
 			"provider": "snowflake",
 			"driver": "snowflake_jdbc",
-			"name": "TEST_DB",
+			"name": "DB",
 			"save-password": true,
 			"configuration": {
 				"host": "gildan.east-us-2.azure.snowflakecomputing.com",

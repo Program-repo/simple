@@ -7,16 +7,16 @@
 			"name": "TEST_DB",
 			"save-password": true,
 			"configuration": {
-				"host": "gildan.east-us-2.azure.snowflakecomputing.comgildan.east-us-2.azure.snowflakecomputing.com",
+				"host": "gildan.east-us-2.azure.snowflakecomputing.com",
 				"port": "443",
 				"server": "REPORTER_WH",
-				"database": "TEST_DB",
-				"url": "jdbc:snowflake://gildan.east-us-2.azure.snowflakecomputing.comgildan.east-us-2.azure.snowflakecomputing.com:443/?db\u003dTEST_DB\u0026warehouse\u003dREPORTER_WH",
+				"url": "jdbc:snowflake://gildan.east-us-2.azure.snowflakecomputing.com:443/?warehouse\u003dREPORTER_WH",
 				"configurationType": "MANUAL",
 				"type": "dev",
 				"closeIdleConnection": true,
 				"provider-properties": {
-					"@dbeaver-schema@": ""
+					"@dbeaver-schema@": "",
+					"ddString": "false"
 				},
 				"auth-model": "snowflake_snowflake"
 			}
